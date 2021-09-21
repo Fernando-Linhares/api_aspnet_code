@@ -11,8 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using ApiAspnetCore.Data;
 
-namespace api_aspnet_core
+namespace ApiAspnetCore
 {
     public class Startup
     {
@@ -28,6 +30,10 @@ namespace api_aspnet_core
         {
 
             services.AddControllers();
+            string connection = Configuration.GetConnectionString("Default");
+            services.AddDbContext<DataContext>(options =>
+                options.UseMySql(connection,ServerVersion.AutoDetect(connection)));
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api_aspnet_core", Version = "v1" });
